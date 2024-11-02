@@ -16,12 +16,18 @@
         <td>Price</td>
         <td>Description</td>
       </tr>
-      {{ range $index,$item := .Site.Data.products }}
+      {{ $productsCSV := resources.Get "products.csv" }}
+      
+      {{ $csvContent := $productsCSV.Content | string}}
+      {{ $rows := split $csvContent "\n" }}
+      {{range $index,$row := $rows}}
+        {{if eq $index 0}} {{continue}} {{end}}
+        {{ $column := split $row "," }}
         <tr>
-          <td>{{add $index 1}}</td>
-          <td>{{ $item.name }}</td>
-          <td>{{ $item.price }}</td>
-          <td>{{ $item.desc }}</td>
+          <td>{{ $index }}</td>
+          <td>{{ index $column 0 }}</td>
+          <td>{{ index $column 1 }}</td>
+          <td>{{ index $column 2 }}</td>
         </tr>
       {{ end }}
     </table>
